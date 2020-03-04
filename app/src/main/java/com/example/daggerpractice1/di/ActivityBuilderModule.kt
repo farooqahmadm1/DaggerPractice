@@ -1,15 +1,12 @@
 package com.example.daggerpractice1.di
 
-import com.example.daggerpractice1.di.auth.AuthModule
-import com.example.daggerpractice1.di.auth.AuthViewModelModule
-import com.example.daggerpractice1.ui.Auth.AuthActivity
+import com.example.daggerpractice1.MainActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 
-@Module
+@Module(includes = [ViewModelModule::class])
 abstract class ActivityBuilderModule{
-
-    @ContributesAndroidInjector(modules = [AuthViewModelModule::class,AuthModule::class])
-    abstract fun contributeAuthActivity() : AuthActivity
+    @ContributesAndroidInjector(modules = [FragmentBuilderModule::class])
+    abstract fun contributeAuthActivity(): MainActivity
 }

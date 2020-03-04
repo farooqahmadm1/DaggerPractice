@@ -1,16 +1,10 @@
 package com.example.daggerpractice1.ui.Auth
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-
-import com.example.daggerpractice1.network.auth.AuthApi
-import kotlinx.coroutines.Dispatchers
+import com.example.daggerpractice1.network.auth.AuthRepo
 import javax.inject.Inject
 
-class AuthViewModel @Inject constructor(authApi: AuthApi):ViewModel(){
-
-    val authApi: AuthApi = authApi
-    val firstTodo = liveData(Dispatchers.IO) {
-        emit(authApi.getUser(1))
-    }
+class AuthViewModel @Inject constructor(authRepo: AuthRepo) : ViewModel() {
+    private val repo = authRepo
+    val firstTodo = repo.firstTodo
 }
