@@ -6,7 +6,9 @@ import com.example.daggerpractice1.network.RestApiServices
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
-class HomeRepo @Inject constructor(apiServices: RestApiServices) {
+class HomeRepo @Inject constructor(
+    private val apiServices: RestApiServices
+) {
 
     var firstTodo = liveData(Dispatchers.IO) {
         try {
