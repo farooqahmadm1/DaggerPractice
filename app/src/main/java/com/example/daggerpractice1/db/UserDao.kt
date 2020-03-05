@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(userResponse: UserResponse)
+    suspend fun insert(userResponse: UserResponse)
 
     @Query("SELECT * FROM USER")
     fun getUser(): Flow<UserResponse>

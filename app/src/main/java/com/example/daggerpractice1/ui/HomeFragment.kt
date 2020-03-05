@@ -5,8 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.example.daggerpractice1.R
 import com.example.daggerpractice1.di.Injectable
 import com.example.daggerpractice1.di.ViewModelProviderFactory
@@ -19,9 +20,12 @@ import javax.inject.Inject
 class HomeFragment : Fragment(), Injectable {
 
     @Inject
-    lateinit var factory: ViewModelProviderFactory
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    lateinit var viewModel: HomeViewModel
+    val viewModel: HomeViewModel by viewModels { viewModelFactory }
+
+    @Inject
+    lateinit var factory: ViewModelProviderFactory
 
 
     override fun onCreateView(
@@ -35,7 +39,6 @@ class HomeFragment : Fragment(), Injectable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this, factory).get(HomeViewModel::class.java)
         viewModel.firstTodo.observe(viewLifecycleOwner, Observer {
             response.text = it.title + "\n" + it.body
         })
