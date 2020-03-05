@@ -2,12 +2,8 @@ package com.example.daggerpractice1.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import dagger.Binds
-import dagger.MapKey
-import dagger.Module
 import javax.inject.Inject
 import javax.inject.Provider
-import kotlin.reflect.KClass
 
 class ViewModelProviderFactory @Inject constructor(
     private val creators: @JvmSuppressWildcards Map<Class<out ViewModel>, Provider<ViewModel>>
@@ -33,16 +29,4 @@ class ViewModelProviderFactory @Inject constructor(
         }
     }
 }
-
-@Module
-internal abstract class ViewModelFactoryModule{
-    @Binds
-    internal abstract fun bindViewModelFactory(viewModelProviderFactory: ViewModelProviderFactory)
-            : ViewModelProvider.Factory
-}
-
-@Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
-@Retention(AnnotationRetention.RUNTIME)
-@MapKey
-annotation class ViewModelKey(val value: KClass<out ViewModel>)
 

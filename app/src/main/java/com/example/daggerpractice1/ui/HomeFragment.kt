@@ -1,4 +1,4 @@
-package com.example.daggerpractice1
+package com.example.daggerpractice1.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.example.daggerpractice1.R
 import com.example.daggerpractice1.di.Injectable
 import com.example.daggerpractice1.di.ViewModelProviderFactory
-import com.example.daggerpractice1.ui.Auth.AuthViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -19,12 +19,9 @@ import javax.inject.Inject
 class HomeFragment : Fragment(), Injectable {
 
     @Inject
-    lateinit var text: String
-
-    @Inject
     lateinit var factory: ViewModelProviderFactory
 
-    lateinit var viewModel: AuthViewModel
+    lateinit var viewModel: HomeViewModel
 
 
     override fun onCreateView(
@@ -38,9 +35,9 @@ class HomeFragment : Fragment(), Injectable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this, factory).get(AuthViewModel::class.java)
-        viewModel.firstTodo.observe(this, Observer {
-            response.text = it.email + it.company + it.email
+        viewModel = ViewModelProviders.of(this, factory).get(HomeViewModel::class.java)
+        viewModel.firstTodo.observe(viewLifecycleOwner, Observer {
+            response.text = it.title + "\n" + it.body
         })
     }
 }

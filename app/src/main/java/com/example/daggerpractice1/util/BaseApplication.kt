@@ -10,18 +10,20 @@ import com.example.daggerpractice1.di.DaggerAppComponent
 import com.example.daggerpractice1.di.Injectable
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import dagger.android.support.AndroidSupportInjection
-import dagger.android.support.DaggerApplication
+import javax.inject.Inject
 
-class BaseApplication : DaggerApplication() {
+class BaseApplication : Application(), HasAndroidInjector {
 
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerAppComponent.factory().create(applicationContext)
-    }
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
     override fun onCreate() {
         super.onCreate()
+        DaggerAppComponent.builder().application(this)
+            .build().inject(this)
         this.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityPaused(activity: Activity) {}
 
@@ -63,4 +65,6 @@ class BaseApplication : DaggerApplication() {
                 )
         }
     }
+
+    override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
 }
