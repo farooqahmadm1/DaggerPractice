@@ -9,12 +9,13 @@ import com.example.daggerpractice1.util.Constants
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-@Module(includes = [ViewModelModule::class])
+@Module
 class AppModule{
 
     @Singleton
@@ -28,12 +29,23 @@ class AppModule{
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(): OkHttpClient = OkHttpClient
-        .Builder()
-        .connectTimeout(30, TimeUnit.MINUTES)
-        .readTimeout(30, TimeUnit.MINUTES)
-        .writeTimeout(30, TimeUnit.MINUTES)
-        .build()
+    fun provideOkHttpClient(): OkHttpClient{
+        val httpInterceptor = HttpLoggingInterceptor()
+        httpInterceptor.level = HttpLoggingInterceptor.Level.BODY
+
+        return OkHttpClient.Builder()
+            .connectTimeout(1, TimeUnit.MINUTES)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(15, TimeUnit.SECONDS)
+            .addInterceptor(httpInterceptor)
+            .addInterceptor { chain ->
+                val original = chain.request()
+                val requestBuilder = original.newBuilder()
+                val request = requestBuilder.build()
+                chain.proceed(request)
+            }.build()
+    }
+
 
     @Singleton
     @Provides
@@ -45,5 +57,4 @@ class AppModule{
     @Singleton
     @Provides
     fun provideUserDao(db: AppDatabase): UserDao = db.userDao()
-
 }
